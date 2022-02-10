@@ -22,13 +22,13 @@ source+=("$pkgname-$pkgver-$pkgrel.tar.gz::$url/-/archive/v$pkgver/calamares-v$p
 		 "fbpos-calamares.zip"
          #"$pkgname-$pkgver-$pkgrel.tar.gz::$url/-/archive/$_commit/$pkgname-$_commit.tar.gz"
         )
-sha256sums=('a30ef8887710a8ec853deb41fb87e8bd11e6fbc8df02ebb368da43659b292dca'
+sha256sums=('56c46f3ab2be52b27530fb08a53a9b1337f735c9473e1ecb5da49930e70f8774'
             '11df76de914141342d2827a79491b998471c473cb57edafeea3287916e745b7f')
 
 prepare() {
 	#mv ${srcdir}/calamares-${_commit} ${srcdir}/calamares-${pkgver}
 	#mv ${srcdir}/calamares-v${pkgver} ${srcdir}/calamares-${pkgver}
-	cd ${srcdir}/calamares-${pkgver}
+	cd ${srcdir}/calamares-v${pkgver}
 	sed -i -e 's/"Install configuration files" OFF/"Install configuration files" ON/' CMakeLists.txt
 	
 	# change version
@@ -44,7 +44,7 @@ prepare() {
 }
 
 build() {
-	cd ${srcdir}/calamares-${pkgver}
+	cd ${srcdir}/calamares-v${pkgver}
 
 	mkdir -p build
 	cd build
@@ -63,7 +63,7 @@ build() {
 }
 
 package() {
-	cd ${srcdir}/calamares-${pkgver}/build
+	cd ${srcdir}/calamares-v${pkgver}/build
 	make DESTDIR="$pkgdir" install
 	install -Dm644 "../data/manjaro-icon.svg" "$pkgdir/usr/share/icons/hicolor/scalable/apps/calamares.svg"
 	install -Dm644 "../data/calamares.desktop" "$pkgdir/usr/share/applications/calamares.desktop"
@@ -80,9 +80,12 @@ package() {
 	mkdir "${pkgdir}/etc/calamares/branding"
 	mkdir "${pkgdir}/etc/calamares/branding/fbpos"
 	cp -R "${srcdir}/settings.conf" "${pkgdir}/etc/calamares/"
+	cp -R "${srcdir}/settings.conf" "${pkgdir}/usr/share/calamares/"
 	cp -R "${srcdir}/fbpos/branding.desc" "${pkgdir}/etc/calamares/branding/fbpos/"
 	cp -R "${srcdir}/fbpos/show.qml" "${pkgdir}/etc/calamares/branding/fbpos/"
 	cp -R "${srcdir}/fbpos/squid.png" "${pkgdir}/etc/calamares/branding/fbpos/"
 	cp -R "${srcdir}/fbpos/stylesheet.qss" "${pkgdir}/etc/calamares/branding/fbpos/"
 	cp -R "${srcdir}/calamares.desktop" "${pkgdir}/usr/share/applications/"
+	cp -R "${srcdir}/netinstall.conf" "${pkgdir}/usr/share/calamares/modules/"
+	cp -R "${srcdir}/welcome.conf" "${pkgdir}/usr/share/calamares/modules/"
 }
